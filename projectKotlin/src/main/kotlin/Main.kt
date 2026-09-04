@@ -28,4 +28,24 @@ fun main() {
     recaudacionTotal = 800.0
 
     println("Nueva recaudación: $recaudacionTotal")
+
+
+
+    val costoBase = calcularCostoBase( minutosUso, tarifaHora )
+    println("Costo base: $costoBase")
+
+    val totalConIva = aplicarIva(costoBase)
+    println("Total con IVA: $totalConIva")
+
+
 }
+
+
+fun calcularCostoBase(minutos: Int, tarifaHora: Double): Double{
+    return  (minutos/60.0)*tarifaHora
+}
+
+fun aplicarIva(monto: Double): Double{
+    return  monto*1.19
+}
+
