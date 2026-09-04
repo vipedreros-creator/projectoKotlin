@@ -1,10 +1,9 @@
 package org.example
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     println("GameZone iniciado")
 
+    // KOT-002
     val nombreSistema: String = "GameZone"
     val capacidad: Int = 10
     var recaudacionTotal: Double = 0.0
@@ -29,23 +28,59 @@ fun main() {
 
     println("Nueva recaudación: $recaudacionTotal")
 
-
-
-    val costoBase = calcularCostoBase( minutosUso, tarifaHora )
+    // KOT-003
+    val costoBase = calcularCostoBase(minutosUso, tarifaHora)
     println("Costo base: $costoBase")
 
     val totalConIva = aplicarIva(costoBase)
     println("Total con IVA: $totalConIva")
 
+    // KOT-004
+    val tipoUsuario = "socio"
 
+    println(describirTipoUsuario(tipoUsuario))
+
+    val monto = 10000.0
+
+    println("Monto infantil: ${aplicarBeneficioUsuario(monto, "infantil")}")
+    println("Monto socio: ${aplicarBeneficioUsuario(monto, "socio")}")
+    println("Monto educacional: ${aplicarBeneficioUsuario(monto, "educacional")}")
+
+    if (tipoUsuario == "socio") {
+        println("Tiene beneficio de socio")
+    } else {
+        println("No tiene beneficio de socio")
+    }
 }
 
-
-fun calcularCostoBase(minutos: Int, tarifaHora: Double): Double{
-    return  (minutos/60.0)*tarifaHora
+// KOT-003
+fun calcularCostoBase(minutos: Int, tarifaHora: Double): Double {
+    return (minutos / 60.0) * tarifaHora
 }
 
-fun aplicarIva(monto: Double): Double{
-    return  monto*1.19
+fun aplicarIva(monto: Double): Double {
+    return monto * 1.19
+}
+
+// KOT-004
+fun describirTipoUsuario(tipoUsuario: String): String {
+    return when (tipoUsuario) {
+        "infantil" -> "Usuario infantil"
+        "socio" -> "Usuario socio"
+        "educacional" -> "Usuario educacional"
+        else -> "Tipo de usuario inválido"
+    }
+}
+
+fun aplicarBeneficioUsuario(
+    monto: Double,
+    tipoUsuario: String
+): Double {
+    return when (tipoUsuario) {
+        "socio" -> monto * 0.80
+        "educacional" -> monto * 0.50
+        "infantil" -> monto
+        else -> monto
+    }
 }
 
