@@ -126,6 +126,43 @@ fun main() {
     // Transición a EnReparacion
     puesto.estado = EstadoPuesto.EnReparacion("mantenimiento preventivo")
     println("Nuevo estado: ${describirEstado(puesto)}")
+
+    // KOT-010 - Consultas Funcionales
+    println("\n--- KOT-010 - Consultas Funcionales ---")
+
+    // 1. Colección de Tickets de prueba
+    val tickets: List<Ticket> = listOf(
+        Ticket(1, "CC12CD", "Clasica", 75, 1200.0),
+        Ticket(2, "CM22TO", "Moderna", 18, 0.0),
+        Ticket(3, "VR44RG", "VR", 120, 7000.0),
+        Ticket(4, "CC15XX", "Clasica", 60, 800.0),
+        Ticket(5, "VR99AA", "VR", 45, 3900.0)
+    )
+
+    // 2. Uso obligatorio de FILTER: Obtener sólo tickets de consolas VR
+    val ticketsVR = tickets.filter { ticket ->
+        ticket.tipoConsola == "VR"
+    }
+    println("Tickets VR encontrados: ${ticketsVR.size}")
+
+    // 3. Uso obligatorio de MAP: Extraer sólo los códigos de las consolas atendidas
+    val codigosAtendidos = tickets.map { ticket ->
+        ticket.codigoConsola
+    }
+    println("Códigos de consolas atendidas: $codigosAtendidos")
+
+    // 4. Uso obligatorio de SUMOF: Calcular la recaudación total acumulada
+    val recaudacionTotalTickets = tickets.sumOf { ticket ->
+        ticket.monto
+    }
+    println("Recaudación total: $$recaudacionTotalTickets")
+
+    // 5. Encadenamiento de operaciones (Filter + SumOf)
+    val ingresoVR = tickets
+        .filter { ticket -> ticket.tipoConsola == "VR" }
+        .sumOf { ticket -> ticket.monto }
+
+    println("Ingreso total generado por consolas VR: $$ingresoVR")
 }
 
 // KOT-003
