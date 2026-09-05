@@ -65,6 +65,34 @@ fun main() {
     println("Marca: ${consola.marca}")
     println("Modelo: ${consola.modelo}")
     println("Tipo de Usuario: ${consola.tipoUsuario}")
+
+    // KOT-006 - Jerarquía de Consolas
+    val clasica = ConsolaClasica(
+        codigo = "CC12CD",
+        marca = "Sony",
+        modelo = "PlayStation 2",
+        tipoUsuario = "socio"
+    )
+
+    val moderna = ConsolaModerna(
+        codigo = "CM22TO",
+        marca = "Nintendo",
+        modelo = "Switch",
+        tipoUsuario = "infantil"
+    )
+
+    val vr = ConsolaVR(
+        codigo = "VR44RG",
+        marca = "Meta",
+        modelo = "Quest 3",
+        tipoUsuario = "educacional",
+        accesoriosPremium = true
+    )
+
+    println("--- KOT-006 ---")
+    println("Consola Clásica: ${clasica.modelo} - Tarifa: $${clasica.tarifaBase}")
+    println("Consola Moderna: ${moderna.modelo} - Tarifa: $${moderna.tarifaBase}")
+    println("Consola VR: ${vr.modelo} - Tarifa: $${vr.tarifaBase} - Premium: ${vr.accesoriosPremium}")
 }
 
 // KOT-003
