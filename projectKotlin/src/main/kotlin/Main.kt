@@ -108,6 +108,24 @@ fun main() {
         val tarifa = consola.calcularTarifa(minutosDeUso)
         println("Consola: ${consola.modelo} (${consola.javaClass.simpleName}) - Tarifa calculada: $$tarifa")
     }
+
+    // KOT-008 - Estados de los puestos
+    println("\n--- KOT-008 - Prueba de Estados de Puestos ---")
+    val puesto = Puesto(1)
+    println("Estado inicial: ${describirEstado(puesto)}")
+
+    // Transición a EnProceso
+    puesto.estado = EstadoPuesto.EnProceso("registrando entrada")
+    println("Nuevo estado: ${describirEstado(puesto)}")
+
+    // Transición a EnJuego
+    val consolaVR = ConsolaVR("VR44RG", "Meta", "Quest 3", "educacional", true)
+    puesto.estado = EstadoPuesto.EnJuego(consolaVR)
+    println("Nuevo estado: ${describirEstado(puesto)}")
+
+    // Transición a EnReparacion
+    puesto.estado = EstadoPuesto.EnReparacion("mantenimiento preventivo")
+    println("Nuevo estado: ${describirEstado(puesto)}")
 }
 
 // KOT-003
