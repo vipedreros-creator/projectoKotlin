@@ -51,6 +51,20 @@ fun main() {
     } else {
         println("No tiene beneficio de socio")
     }
+
+    // KOT-005
+    val consola = Consola(
+        codigo = "CC12CD",
+        marca = "Sony",
+        modelo = "PlayStation 5",
+        tipoUsuario = "socio"
+    )
+
+    println("Consola creada:")
+    println("Código: ${consola.codigo}")
+    println("Marca: ${consola.marca}")
+    println("Modelo: ${consola.modelo}")
+    println("Tipo de Usuario: ${consola.tipoUsuario}")
 }
 
 // KOT-003
@@ -83,4 +97,5 @@ fun aplicarBeneficioUsuario(
         else -> monto
     }
 }
+
 
