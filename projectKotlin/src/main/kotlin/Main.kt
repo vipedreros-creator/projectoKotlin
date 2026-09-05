@@ -93,6 +93,21 @@ fun main() {
     println("Consola Clásica: ${clasica.modelo} - Tarifa: $${clasica.tarifaBase}")
     println("Consola Moderna: ${moderna.modelo} - Tarifa: $${moderna.tarifaBase}")
     println("Consola VR: ${vr.modelo} - Tarifa: $${vr.tarifaBase} - Premium: ${vr.accesoriosPremium}")
+
+    // KOT-007 - Tarifas Polimórficas
+    println("\n--- KOT-007 - Prueba Polimórfica ---")
+    val minutosDeUso = 60
+
+    val consolas: List<Consola> = listOf(
+        ConsolaClasica("CC12CD", "Sony", "PlayStation 2", "socio"),
+        ConsolaModerna("CM22TO", "Nintendo", "Switch", "infantil"),
+        ConsolaVR("VR44RG", "Meta", "Quest 3", "educacional", true)
+    )
+
+    for (consola in consolas) {
+        val tarifa = consola.calcularTarifa(minutosDeUso)
+        println("Consola: ${consola.modelo} (${consola.javaClass.simpleName}) - Tarifa calculada: $$tarifa")
+    }
 }
 
 // KOT-003

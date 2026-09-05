@@ -13,4 +13,13 @@ class ConsolaVR(
     tipoUsuario
 ) {
     val tarifaBase: Double = 3000.0
+
+    override fun calcularTarifa(minutos: Int): Double {
+        val costoBase = (minutos / 60.0) * tarifaBase
+        return if (accesoriosPremium) {
+            costoBase * 1.30
+        } else {
+            costoBase
+        }
+    }
 }
