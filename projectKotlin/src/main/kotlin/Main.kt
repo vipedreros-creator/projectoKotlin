@@ -1,171 +1,12 @@
 package org.example
 
-fun main() {
-    println("GameZone iniciado")
+import kotlinx.coroutines.runBlocking
 
-    // KOT-002
-    val nombreSistema: String = "GameZone"
-    val capacidad: Int = 10
-    var recaudacionTotal: Double = 0.0
+// ==========================================
+// FUNCIONES DE MISIONES ANTERIORES
+// ==========================================
 
-    val codigoConsola: String = "CC12CD"
-    val marca: String = "PlayStation"
-    val modelo: String = "PlayStation 5"
-    val minutosUso: Int = 75
-    val tarifaHora: Double = 800.0
-
-    println("Sistema: $nombreSistema")
-    println("Capacidad: $capacidad")
-    println("Recaudación: $recaudacionTotal")
-
-    println("Código consola: $codigoConsola")
-    println("Marca: $marca")
-    println("Modelo: $modelo")
-    println("Minutos de uso: $minutosUso")
-    println("Tarifa por hora: $tarifaHora")
-
-    recaudacionTotal = 800.0
-
-    println("Nueva recaudación: $recaudacionTotal")
-
-    // KOT-003
-    val costoBase = calcularCostoBase(minutosUso, tarifaHora)
-    println("Costo base: $costoBase")
-
-    val totalConIva = aplicarIva(costoBase)
-    println("Total con IVA: $totalConIva")
-
-    // KOT-004
-    val tipoUsuario = "socio"
-
-    println(describirTipoUsuario(tipoUsuario))
-
-    val monto = 10000.0
-
-    println("Monto infantil: ${aplicarBeneficioUsuario(monto, "infantil")}")
-    println("Monto socio: ${aplicarBeneficioUsuario(monto, "socio")}")
-    println("Monto educacional: ${aplicarBeneficioUsuario(monto, "educacional")}")
-
-    if (tipoUsuario == "socio") {
-        println("Tiene beneficio de socio")
-    } else {
-        println("No tiene beneficio de socio")
-    }
-
-    // KOT-005
-    val consola = Consola(
-        codigo = "CC12CD",
-        marca = "Sony",
-        modelo = "PlayStation 5",
-        tipoUsuario = "socio"
-    )
-
-    println("Consola creada:")
-    println("Código: ${consola.codigo}")
-    println("Marca: ${consola.marca}")
-    println("Modelo: ${consola.modelo}")
-    println("Tipo de Usuario: ${consola.tipoUsuario}")
-
-    // KOT-006 - Jerarquía de Consolas
-    val clasica = ConsolaClasica(
-        codigo = "CC12CD",
-        marca = "Sony",
-        modelo = "PlayStation 2",
-        tipoUsuario = "socio"
-    )
-
-    val moderna = ConsolaModerna(
-        codigo = "CM22TO",
-        marca = "Nintendo",
-        modelo = "Switch",
-        tipoUsuario = "infantil"
-    )
-
-    val vr = ConsolaVR(
-        codigo = "VR44RG",
-        marca = "Meta",
-        modelo = "Quest 3",
-        tipoUsuario = "educacional",
-        accesoriosPremium = true
-    )
-
-    println("--- KOT-006 ---")
-    println("Consola Clásica: ${clasica.modelo} - Tarifa: $${clasica.tarifaBase}")
-    println("Consola Moderna: ${moderna.modelo} - Tarifa: $${moderna.tarifaBase}")
-    println("Consola VR: ${vr.modelo} - Tarifa: $${vr.tarifaBase} - Premium: ${vr.accesoriosPremium}")
-
-    // KOT-007 - Tarifas Polimórficas
-    println("\n--- KOT-007 - Prueba Polimórfica ---")
-    val minutosDeUso = 60
-
-    val consolas: List<Consola> = listOf(
-        ConsolaClasica("CC12CD", "Sony", "PlayStation 2", "socio"),
-        ConsolaModerna("CM22TO", "Nintendo", "Switch", "infantil"),
-        ConsolaVR("VR44RG", "Meta", "Quest 3", "educacional", true)
-    )
-
-    for (consola in consolas) {
-        val tarifa = consola.calcularTarifa(minutosDeUso)
-        println("Consola: ${consola.modelo} (${consola.javaClass.simpleName}) - Tarifa calculada: $$tarifa")
-    }
-
-    // KOT-008 - Estados de los puestos
-    println("\n--- KOT-008 - Prueba de Estados de Puestos ---")
-    val puesto = Puesto(1)
-    println("Estado inicial: ${describirEstado(puesto)}")
-
-    // Transición a EnProceso
-    puesto.estado = EstadoPuesto.EnProceso("registrando entrada")
-    println("Nuevo estado: ${describirEstado(puesto)}")
-
-    // Transición a EnJuego
-    val consolaVR = ConsolaVR("VR44RG", "Meta", "Quest 3", "educacional", true)
-    puesto.estado = EstadoPuesto.EnJuego(consolaVR)
-    println("Nuevo estado: ${describirEstado(puesto)}")
-
-    // Transición a EnReparacion
-    puesto.estado = EstadoPuesto.EnReparacion("mantenimiento preventivo")
-    println("Nuevo estado: ${describirEstado(puesto)}")
-
-    // KOT-010 - Consultas Funcionales
-    println("\n--- KOT-010 - Consultas Funcionales ---")
-
-    // 1. Colección de Tickets de prueba
-    val tickets: List<Ticket> = listOf(
-        Ticket(1, "CC12CD", "Clasica", 75, 1200.0),
-        Ticket(2, "CM22TO", "Moderna", 18, 0.0),
-        Ticket(3, "VR44RG", "VR", 120, 7000.0),
-        Ticket(4, "CC15XX", "Clasica", 60, 800.0),
-        Ticket(5, "VR99AA", "VR", 45, 3900.0)
-    )
-
-    // 2. Uso obligatorio de FILTER: Obtener sólo tickets de consolas VR
-    val ticketsVR = tickets.filter { ticket ->
-        ticket.tipoConsola == "VR"
-    }
-    println("Tickets VR encontrados: ${ticketsVR.size}")
-
-    // 3. Uso obligatorio de MAP: Extraer sólo los códigos de las consolas atendidas
-    val codigosAtendidos = tickets.map { ticket ->
-        ticket.codigoConsola
-    }
-    println("Códigos de consolas atendidas: $codigosAtendidos")
-
-    // 4. Uso obligatorio de SUMOF: Calcular la recaudación total acumulada
-    val recaudacionTotalTickets = tickets.sumOf { ticket ->
-        ticket.monto
-    }
-    println("Recaudación total: $$recaudacionTotalTickets")
-
-    // 5. Encadenamiento de operaciones (Filter + SumOf)
-    val ingresoVR = tickets
-        .filter { ticket -> ticket.tipoConsola == "VR" }
-        .sumOf { ticket -> ticket.monto }
-
-    println("Ingreso total generado por consolas VR: $$ingresoVR")
-}
-
-// KOT-003
+// KOT-003: Funciones de cálculo
 fun calcularCostoBase(minutos: Int, tarifaHora: Double): Double {
     return (minutos / 60.0) * tarifaHora
 }
@@ -174,7 +15,7 @@ fun aplicarIva(monto: Double): Double {
     return monto * 1.19
 }
 
-// KOT-004
+// KOT-004: Decisión y Reglas de Usuario
 fun describirTipoUsuario(tipoUsuario: String): String {
     return when (tipoUsuario) {
         "infantil" -> "Usuario infantil"
@@ -196,4 +37,114 @@ fun aplicarBeneficioUsuario(
     }
 }
 
+// ==========================================
+// FUNCIÓN PRINCIPAL MAIN (RUNBLOCKING PARA KOT-011)
+// ==========================================
+
+fun main() = runBlocking {
+    println("=== GAMEZONE INICIADO ===")
+
+    // KOT-002: Variables
+    val nombreSistema: String = "GameZone"
+    val capacidad: Int = 10
+    var recaudacionTotal: Double = 0.0
+
+    val codigoConsola: String = "CC12CD"
+    val marca: String = "PlayStation"
+    val modelo: String = "PlayStation 5"
+    val minutosUso: Int = 75
+    val tarifaHora: Double = 800.0
+
+    println("Sistema: $nombreSistema | Capacidad: $capacidad | Recaudación inicial: $recaudacionTotal")
+    println("Consola inicial: $codigoConsola | $marca $modelo | Minutos: $minutosUso | Tarifa: $tarifaHora")
+
+    recaudacionTotal = 800.0
+    println("Nueva recaudación: $recaudacionTotal")
+
+    // KOT-003: Cálculos de costo e IVA
+    println("\n--- KOT-003 ---")
+    val costoBase = calcularCostoBase(minutosUso, tarifaHora)
+    println("Costo base ($minutosUso min): $$costoBase")
+
+    val totalConIva = aplicarIva(costoBase)
+    println("Total con IVA: $$totalConIva")
+
+    // KOT-004: Evaluación de Tipo de Usuario
+    println("\n--- KOT-004 ---")
+    val tipoUsuarioPrueba = "socio"
+    println(describirTipoUsuario(tipoUsuarioPrueba))
+
+    val montoPrueba = 10000.0
+    println("Monto infantil: $${aplicarBeneficioUsuario(montoPrueba, "infantil")}")
+    println("Monto socio: $${aplicarBeneficioUsuario(montoPrueba, "socio")}")
+    println("Monto educacional: $${aplicarBeneficioUsuario(montoPrueba, "educacional")}")
+
+    if (tipoUsuarioPrueba == "socio") {
+        println("Tiene beneficio de socio")
+    } else {
+        println("No tiene beneficio de socio")
+    }
+
+    // KOT-005: Instancia de Clase Base Consola
+    println("\n--- KOT-005 ---")
+    val consolaBase = Consola(
+        codigo = "CC12CD",
+        marca = "Sony",
+        modelo = "PlayStation 5",
+        tipoUsuario = "socio"
+    )
+    println("Consola creada: ${consolaBase.codigo} - ${consolaBase.marca} ${consolaBase.modelo}")
+
+    // KOT-006: Jerarquía de Consolas
+    println("\n--- KOT-006 ---")
+    val clasica = ConsolaClasica("CC12CD", "Sony", "PlayStation 2", "socio")
+    val moderna = ConsolaModerna("CM22TO", "Nintendo", "Switch", "infantil")
+    val vr = ConsolaVR("VR44RG", "Meta", "Quest 3", "educacional", true)
+
+    println("Clásica: ${clasica.modelo} | Tarifa: $${clasica.tarifaBase}")
+    println("Moderna: ${moderna.modelo} | Tarifa: $${moderna.tarifaBase}")
+    println("VR: ${vr.modelo} | Tarifa: $${vr.tarifaBase} | Premium: ${vr.accesoriosPremium}")
+
+    // KOT-007: Polimorfismo
+    println("\n--- KOT-007 ---")
+    val listaConsolas: List<Consola> = listOf(clasica, moderna, vr)
+    for (c in listaConsolas) {
+        println("Consola ${c.modelo} - Tarifa polimórfica (60 min): $${c.calcularTarifa(60)}")
+    }
+
+    // KOT-008: Estados del Puesto
+    println("\n--- KOT-008 ---")
+    val puestoDemo = Puesto(1)
+    println("Estado inicial puesto 1: ${describirEstado(puestoDemo)}")
+    puestoDemo.estado = EstadoPuesto.EnProceso("registrando entrada")
+    println("Estado cambiado: ${describirEstado(puestoDemo)}")
+
+    // KOT-010: Consultas Funcionales
+    println("\n--- KOT-010 ---")
+    val ticketsPrueba: List<Ticket> = listOf(
+        Ticket(1, "CC12CD", "Clasica", 75, 1200.0),
+        Ticket(2, "CM22TO", "Moderna", 18, 0.0),
+        Ticket(3, "VR44RG", "VR", 120, 7000.0)
+    )
+
+    val ticketsVR = ticketsPrueba.filter { it.tipoConsola == "VR" }
+    val codigosAtendidos = ticketsPrueba.map { it.codigoConsola }
+    val recaudacionTotalTickets = ticketsPrueba.sumOf { it.monto }
+
+    println("Tickets VR encontrados: ${ticketsVR.size}")
+    println("Códigos de consolas atendidas: $codigosAtendidos")
+    println("Recaudación total tickets: $$recaudacionTotalTickets")
+
+    // KOT-011: Operaciones Asíncronas
+    println("\n--- KOT-011 ---")
+    val puestos = MutableList(10) { indice -> Puesto(indice + 1) }
+
+    println("[1] Intentando registrar entrada...")
+    registrarEntrada(puestos, clasica)
+
+    println("\n[2] Intentando registrar salida...")
+    registrarSalida(puestos, "CC12CD", 75)
+
+    println("\n=== SIMULACIÓN COMPLETA FINALIZADA CON ÉXITO ===")
+}
 
