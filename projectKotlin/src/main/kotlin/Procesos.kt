@@ -5,20 +5,52 @@ import kotlinx.coroutines.delay
 val historialTickets = mutableListOf<Ticket>()
 var contadorTickets = 1
 
+// Validaciones KOT-012
+fun validarCodigo(codigo: String): Boolean {
+    val regex = Regex("^[A-Za-z]{2}[0-9]{2}[A-Za-z]{2}$")
+    return regex.matches(codigo)
+}
+
+fun validarTarifa(
+    consola: Consola,
+    minutos: Int,
+    monto: Double
+): Boolean {
+    if (monto < 0.0) return false
+    if (monto == 0.0 && !(consola is ConsolaModerna && minutos < 20)) return false
+    return true
+}
+
 suspend fun registrarEntrada(
     puestos: MutableList<Puesto>,
     consola: Consola
 ): Boolean {
-    val puesto = puestos.firstOrNull { it.estado is EstadoPuesto.Libre } ?: return false
+    return try {
+        if (!validarCodigo(consola.codigo)) {
+            throw IllegalArgumentException("Código de consola inválido: ${consola.codigo}")
+        }
 
-    puesto.estado = EstadoPuesto.EnProceso("registrando entrada")
-    println("Puesto ${puesto.numero}: Registrando entrada...")
+        val puesto = puestos.firstOrNull { it.estado is EstadoPuesto.Libre }
+            ?: run {
+                println("Error: No existen puestos disponibles")
+                return false
+            }
 
-    delay(3000) // Simula la espera de 3 segundos
+        puesto.estado = EstadoPuesto.EnProceso("registrando entrada")
+        println("Puesto ${puesto.numero}: Registrando entrada...")
 
-    puesto.estado = EstadoPuesto.EnJuego(consola)
-    println("Puesto ${puesto.numero}: ¡Entrada registrada! Consola ${consola.codigo} ahora está EnJuego.")
-    return true
+        delay(3000)
+
+        puesto.estado = EstadoPuesto.EnJuego(consola)
+        println("Puesto ${puesto.numero}: Entrada registrada (${consola.codigo}).")
+        true
+    } catch (e: IllegalArgumentException) {
+        println("Error al registrar entrada: ${e.message}")
+        false
+    } catch (e: Exception) {
+        println("Error inesperado en entrada: ${e.message}")
+        false
+    }
 }
 
 suspend fun registrarSalida(
@@ -26,33 +58,53 @@ suspend fun registrarSalida(
     codigoConsola: String,
     minutosUso: Int
 ): Ticket? {
-    val puesto = puestos.firstOrNull { p ->
-        val estado = p.estado
-        estado is EstadoPuesto.EnJuego && estado.consola.codigo == codigoConsola
-    } ?: run {
-        println("No se encontró puesto EnJuego con la consola $codigoConsola")
-        return null
+    return try {
+        if (!validarCodigo(codigoConsola)) {
+            throw IllegalArgumentException("El código '$codigoConsola' no tiene formato válido")
+        }
+
+        val puesto = puestos.firstOrNull { p ->
+            val estado = p.estado
+            estado is EstadoPuesto.EnJuego && estado.consola.codigo == codigoConsola
+        } ?: run {
+            println("Error: Consola no encontrada ($codigoConsola no está en juego)")
+            return null
+        }
+
+        val estadoActual = puesto.estado as EstadoPuesto.EnJuego
+        val consola = estadoActual.consola
+
+        puesto.estado = EstadoPuesto.EnProceso("calculando tarifa")
+        println("Puesto ${puesto.numero}: Calculando tarifa de salida...")
+
+        delay(6500)
+
+        val monto = consola.calcularTarifa(minutosUso)
+        if (!validarTarifa(consola, minutosUso, monto)) {
+            puesto.estado = EstadoPuesto.EnJuego(consola)
+            throw IllegalStateException("Tarifa calculada inválida ($$monto)")
+        }
+
+        val ticket = Ticket(
+            numero = contadorTickets++,
+            codigoConsola = consola.codigo,
+            tipoConsola = consola.javaClass.simpleName.replace("Consola", ""),
+            minutosUso = minutosUso,
+            monto = monto
+        )
+        historialTickets.add(ticket)
+
+        puesto.estado = EstadoPuesto.Libre
+        println("Puesto ${puesto.numero}: Salida procesada. Ticket #${ticket.numero} por $$monto.")
+        ticket
+    } catch (e: IllegalArgumentException) {
+        println("Error de validación en salida: ${e.message}")
+        null
+    } catch (e: IllegalStateException) {
+        println("Error de tarifa en salida: ${e.message}")
+        null
+    } catch (e: Exception) {
+        println("Error inesperado en salida: ${e.message}")
+        null
     }
-
-    val estadoActual = puesto.estado as EstadoPuesto.EnJuego
-    val consola = estadoActual.consola // Guardamos la consola antes de cambiar el estado
-
-    puesto.estado = EstadoPuesto.EnProceso("calculando tarifa")
-    println("Puesto ${puesto.numero}: Calculando tarifa de salida...")
-
-    delay(6500) // Simula la espera de 6.5 segundos
-
-    val monto = consola.calcularTarifa(minutosUso)
-    val ticket = Ticket(
-        numero = contadorTickets++,
-        codigoConsola = consola.codigo,
-        tipoConsola = consola.javaClass.simpleName.replace("Consola", ""),
-        minutosUso = minutosUso,
-        monto = monto
-    )
-    historialTickets.add(ticket)
-
-    puesto.estado = EstadoPuesto.Libre
-    println("Puesto ${puesto.numero}: Salida procesada. Ticket #${ticket.numero} por $$monto. Puesto nuevamente Libre.")
-    return ticket
 }
