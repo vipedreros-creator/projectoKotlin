@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/projectKotlin.iml" filepath="$PROJECT_DIR$/projectKotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/projectKotlin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/projectKotlin.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/projectKotlin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/projectKotlin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/untitled.iml" filepath="$PROJECT_DIR$/untitled.iml" />
     </modules>
   </component>
 </project>
