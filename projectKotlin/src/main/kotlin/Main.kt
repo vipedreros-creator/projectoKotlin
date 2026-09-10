@@ -39,6 +39,16 @@ fun aplicarBeneficioUsuario(monto: Double, tipoUsuario: String): Double {
 fun main() = runBlocking {
     println("=== GAMEZONE INICIADO ===")
 
+    // KOT-002: Variables y Tipos de datos
+    val nombreSistema: String = "GameZone"
+    val totalPuestosSistema: Int = 10
+    val ivaPorcentaje: Double = 0.19
+    val descuentoSocio: Double = 0.20
+    val descuentoEducacional: Double = 0.50
+    var sistemaActivo: Boolean = true
+
+    println("Sistema: $nombreSistema | Puestos: $totalPuestosSistema | Activo: $sistemaActivo")
+
     // KOT-006 & KOT-007: Consolas y Polimorfismo
     val clasica = ConsolaClasica("CC12CD", "Sony", "PlayStation 5", "socio")
     val moderna = ConsolaModerna("CM22TO", "Nintendo", "Switch", "infantil")
