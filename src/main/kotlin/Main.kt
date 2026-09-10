@@ -66,6 +66,26 @@ fun main() = runBlocking {
     println("Puestos totales: $totalPuestosSistema | Libres al inicio: $puestosLibresInicial")
     println("IVA: $ivaComoPorcentajeEntero% | Activo: $sistemaActivo | Capacidad ticket: $ticketsMaximosLong")
 
+    // Variables originales de KOT-002 (datos de ejemplo del sistema)
+    val capacidad: Int = 10
+    var recaudacionTotal: Double = 0.0
+    val codigoConsola: String = "CC12CD"
+    val marca: String = "PlayStation"
+    val modelo: String = "PlayStation 5"
+    val minutosUso: Int = 75
+    val tarifaHora: Double = 800.0
+
+    println("Capacidad: $capacidad")
+    println("Recaudación: $recaudacionTotal")
+    println("Código consola: $codigoConsola")
+    println("Marca: $marca")
+    println("Modelo: $modelo")
+    println("Minutos de uso: $minutosUso")
+    println("Tarifa por hora: $tarifaHora")
+
+    recaudacionTotal = 800.0
+    println("Nueva recaudación: $recaudacionTotal")
+
     // KOT-006 & KOT-007: Consolas y Polimorfismo
     val clasica = ConsolaClasica("CC12CD", "Sony", "PlayStation 5", "socio")
     val moderna = ConsolaModerna("CM22TO", "Nintendo", "Switch", "infantil")
