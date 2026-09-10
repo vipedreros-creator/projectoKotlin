@@ -86,4 +86,33 @@ fun main() = runBlocking {
     registrarSalida(puestosTarifa, "CM22TO", 15)
 
     println("\n=== SIMULACIÓN KOT-012 FINALIZADA CON ÉXITO ===")
+
+    // KOT-013: Simulación completa de negocio
+    println("\n--- KOT-013: Simulación completa de negocio ---")
+    val puestosFinal = MutableList(10) { indice -> Puesto(indice + 1) }
+
+    val c1 = ConsolaClasica("CC12CD", "Sony", "PlayStation 5", "socio")
+    val c2 = ConsolaClasica("CC99ZA", "Microsoft", "Xbox Series X", "infantil")
+    val c3 = ConsolaModerna("CM22TO", "Nintendo", "Switch", "infantil")
+    val c4 = ConsolaVR("VR44RG", "Meta", "Quest 3", "educacional", true)
+    val c5 = ConsolaVR("VR77RG", "HTC", "Vive Pro", "infantil", false)
+
+    registrarEntrada(puestosFinal, c1)
+    registrarEntrada(puestosFinal, c2)
+    registrarEntrada(puestosFinal, c3)
+    registrarEntrada(puestosFinal, c4)
+    registrarEntrada(puestosFinal, c5)
+
+    registrarSalida(puestosFinal, "CC12CD", 75)
+    registrarSalida(puestosFinal, "CC99ZA", 180)
+    registrarSalida(puestosFinal, "CM22TO", 18)
+    registrarSalida(puestosFinal, "VR44RG", 120)
+    registrarSalida(puestosFinal, "VR77RG", 45)
+
+    println("\n--- KOT-010: Consultas de Negocio ---")
+    println("Historial de tickets de socios: ${historialSocios(historialTickets)}")
+    println("Códigos de consolas atendidas: ${codigosAtendidos(historialTickets)}")
+    println("Consola con mayor tiempo de uso: ${consolaMayorTiempoUso(historialTickets)}")
+
+    reporteCierre(historialTickets, puestosFinal)
 }

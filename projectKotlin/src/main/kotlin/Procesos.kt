@@ -52,7 +52,6 @@ suspend fun registrarEntrada(
         false
     }
 }
-
 suspend fun registrarSalida(
     puestos: MutableList<Puesto>,
     codigoConsola: String,
@@ -79,16 +78,24 @@ suspend fun registrarSalida(
 
         delay(6500)
 
-        val monto = consola.calcularTarifa(minutosUso)
-        if (!validarTarifa(consola, minutosUso, monto)) {
+        val montoBase = consola.calcularTarifa(minutosUso)
+        if (!validarTarifa(consola, minutosUso, montoBase)) {
             puesto.estado = EstadoPuesto.EnJuego(consola)
-            throw IllegalStateException("Tarifa calculada inválida ($$monto)")
+            throw IllegalStateException("Tarifa calculada inválida ($$montoBase)")
+        }
+
+        val montoConIva = montoBase * 1.19
+        val monto = if (consola.tipoUsuario == "educacional") {
+            montoConIva * 0.50
+        } else {
+            montoConIva
         }
 
         val ticket = Ticket(
             numero = contadorTickets++,
             codigoConsola = consola.codigo,
             tipoConsola = consola.javaClass.simpleName.replace("Consola", ""),
+            tipoUsuario = consola.tipoUsuario,
             minutosUso = minutosUso,
             monto = monto
         )
