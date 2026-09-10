@@ -40,14 +40,31 @@ fun main() = runBlocking {
     println("=== GAMEZONE INICIADO ===")
 
     // KOT-002: Variables y Tipos de datos
+    // Tipos explícitos
     val nombreSistema: String = "GameZone"
     val totalPuestosSistema: Int = 10
     val ivaPorcentaje: Double = 0.19
     val descuentoSocio: Double = 0.20
     val descuentoEducacional: Double = 0.50
+    val letraSistema: Char = 'G'
+    val version: Float = 1.0f
+    val ticketsMaximosLong: Long = 1000000L
     var sistemaActivo: Boolean = true
 
-    println("Sistema: $nombreSistema | Puestos: $totalPuestosSistema | Activo: $sistemaActivo")
+    // Tipos inferidos (el compilador deduce el tipo)
+    val nombreCorto = "GZ"          // inferido como String
+    val puestosOcupadosInicial = 0  // inferido como Int
+
+    // var vs val: sistemaActivo puede cambiar, los demás no
+    sistemaActivo = true
+
+    // Operación aritmética simple usando las variables tipadas
+    val puestosLibresInicial = totalPuestosSistema - puestosOcupadosInicial
+    val ivaComoPorcentajeEntero = (ivaPorcentaje * 100).toInt()
+
+    println("Sistema: $nombreSistema ($nombreCorto) v$version | Letra: $letraSistema")
+    println("Puestos totales: $totalPuestosSistema | Libres al inicio: $puestosLibresInicial")
+    println("IVA: $ivaComoPorcentajeEntero% | Activo: $sistemaActivo | Capacidad ticket: $ticketsMaximosLong")
 
     // KOT-006 & KOT-007: Consolas y Polimorfismo
     val clasica = ConsolaClasica("CC12CD", "Sony", "PlayStation 5", "socio")
